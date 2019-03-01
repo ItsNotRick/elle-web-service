@@ -16,14 +16,14 @@ import os.path
 
 app = Flask(__name__, static_folder='./templates/build/static')
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'elleservice02!'
-app.config['MYSQL_DATABASE_DB'] = 'elle3'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'pass'
+app.config['MYSQL_DATABASE_DB'] = 'elle-docker'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access']  # allow blacklisting for access tokens
 app.config['UPLOAD_FOLDER'] = './uploads'
 app.config['PROPOGATE_EXCEPTIONS'] = True
-app.secret_key = 'ian'
+#app.secret_key = 'ian'
 mysql.init_app(app)
 api = Api(app)
 
@@ -75,4 +75,4 @@ api.add_resource(CardImage, '/card/image/<int:_id>')
 api.add_resource(CardSound, '/card/sound/<int:_id>')
 api.add_resource(ResetPassword, '/users/reset')
 
-app.run(port=5000, debug=True)
+app.run(host='0.0.0.0', port=5000, debug=True)
