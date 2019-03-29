@@ -1,10 +1,12 @@
 from db import mysql
 from db_utils import *
+from pathlib import Path
 from time import sleep
 import os
 import shutil
 import csv
 import subprocess
+import ffmpeg
 
 ########################################################################################
 # DECKS FUNCTIONS
@@ -26,12 +28,12 @@ def create_csv(data, _id):
 			data_row.append(item[4].encode('utf-8').strip())
 			csv_writer.writerow(data_row)
 
-	os.system('mv ' + filename + ' ./zips/Deck_' + _id)
+	os.rename(filename, cross_plat_path('zips/Deck_' + _id))
 
 def create_zip(data, _id, deck_name):
-	
-	file_name = './zips/Deck_' +  _id + '.zip'
+	file_name = cross_plat_path('zips/Deck_' +  _id + '.zip')
 
+	# what is the point of this? a double click issue?
 	while(os.path.isdir("./zips/Deck_" + _id) and not os.path.isfile(file_name)):
 		sleep(2)
 
@@ -39,10 +41,10 @@ def create_zip(data, _id, deck_name):
 		return
 
 	try:
-		os.system('mkdir ./zips/Deck_' + _id)
-		os.system('mkdir ./zips/Deck_' + _id + '/Audio')
-		os.system('mkdir ./zips/Deck_' + _id + '/Images')
-		f = open('./zips/Deck_' + _id + '/Name.txt', 'w')
+		os.mkdir(cross_plat_path('zips/Deck_' + _id))
+		os.mkdir(cross_plat_path('zips/Deck_' + _id + '/Audio'))
+		os.mkdir(cross_plat_path('zips/Deck_' + _id + '/Images'))
+		f = open(cross_plat_path('zips/Deck_' + _id + '/Name.txt'), 'w')
 		f.write(deck_name)
 		f.close()
 	except:
@@ -55,16 +57,16 @@ def create_zip(data, _id, deck_name):
 		image_name = str(item[8].split('/')[-1])
 		audio_name = str(item[9].split('/')[-1])
 
-		file_path = './zips/Deck_' + _id
+		file_path = cross_plat_path('zips/Deck_' + _id)
 
-		os.system('cp ./Audio/' + audio_name + ' ./zips/Deck_' + _id + '/Audio')
-		os.system('cp ./Images/' + image_name + ' ./zips/Deck_' + _id + '/Images')
+		shutil.copy2(cross_plat_path('Audio/' + audio_name), cross_plat_path('zips/Deck_' + _id + '/Audio'))
+		shutil.copy2(cross_plat_path('Images/' + image_name), cross_plat_path('zips/Deck_' + _id + '/Images'))
 
-	shutil.make_archive('./zips/Deck_' +  _id, 'zip', './zips/Deck_' + _id)
+	shutil.make_archive(cross_plat_path('zips/Deck_' +  _id), 'zip', cross_plat_path('zips/Deck_' + _id))
 
-	os.system('rm -rf ./zips/Deck_' + _id)
+	os.removedirs(cross_plat_path('zips/Deck_' + _id))
 
-def get_id_file_name(_id, filename):
+def get_id_file_name(_id): #, filename):
 	
 	id_length = len(_id)
 
@@ -73,7 +75,7 @@ def get_id_file_name(_id, filename):
 		while(len(new_id) < 4):
 			new_id = '0' + new_id
 
-	return new_id + filename
+	return new_id # + filename
 
 def check_decks_db(_id):
 
@@ -111,18 +113,26 @@ def check_cards_db(_id):
 def convert_audio(filename):
 
 	try:
-		true_filename = './uploads/' + filename
-		output_name = './uploads/' + filename[:-4] + '.ogg'
-		command = ['ffmpeg','-i']
-		command.append(true_filename)
-		command.append('-c:a')
-		command.append('libvorbis')
-		command.append('-b:a')
-		command.append('64k')
-		command.append(output_name)
-		output = subprocess.check_output(command)
+		true_filename = cross_plat_path('uploads/' + filename)
+		print(true_filename)
+		filename, file_extension = os.path.splitext(filename)
+		output_name = cross_plat_path('Audio/' + filename + '.ogg')
+		print(output_name)
+		# command = ['ffmpeg','-i']
+		# command.append(true_filename)
+		# command.append('-c:a')
+		# command.append('libvorbis')
+		# command.append('-b:a')
+		# command.append('64k')
+		# command.append(output_name)
+		# output = subprocess.check_output(command)
+		
+		ffmpeg.input(true_filename, acodec='libvorbis').output(output_name, audio_bitrate='64k').run()
+		
+		print("???")
 		return True
 	except Exception as e:
+		print(str(e))
 		return False
 
 ########################################################################################
@@ -171,3 +181,6 @@ def check_max_id(result):
 
 	else:
 		return 1
+
+def cross_plat_path(unixpath):
+	return str(Path(unixpath).absolute())

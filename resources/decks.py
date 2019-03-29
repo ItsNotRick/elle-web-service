@@ -89,6 +89,8 @@ class Deck(Resource):
 	@jwt_required
 	def get(self, _id=None):
 
+		# Super insecure, the jwt isn't actually checked to see if 
+		# this specific user should be accessing this deck.
 		if not _id:
 			return {'message':'Please provide the id of the deck that you wish to get'}, 400
 

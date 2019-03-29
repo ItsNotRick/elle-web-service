@@ -3,6 +3,8 @@ from flask_restful import Resource, Api
 from flask_jwt_extended import JWTManager
 from flaskext.mysql import MySQL
 
+from flask_cors import CORS
+
 from resources.users import UserRegister, UserLogin, UserLogout, Users, User, ResetPassword
 from resources.sessions import Session
 from resources.leaderboard import Leaderboard
@@ -12,16 +14,19 @@ from resources.groups import Group, Groups
 from db import mysql
 from db_utils import *
 
+from pathlib import Path
+
 import os.path
 
-app = Flask(__name__, static_folder='./templates/build/static')
-app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'elleservice02!'
-app.config['MYSQL_DATABASE_DB'] = 'elle3'
+app = Flask(__name__, static_folder=Path('templates/build/static'))
+CORS(app)
+app.config['MYSQL_DATABASE_USER'] = 'localeservice'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'eserv'
+app.config['MYSQL_DATABASE_DB'] = 'ellelocal'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access']  # allow blacklisting for access tokens
-app.config['UPLOAD_FOLDER'] = './uploads'
+app.config['UPLOAD_FOLDER'] = Path('uploads')
 app.config['PROPOGATE_EXCEPTIONS'] = True
 app.secret_key = 'ian'
 mysql.init_app(app)
