@@ -1,0 +1,11 @@
+cardID,sessionID,Session elapsedTime,roundID,Round elapsedTime,Card Name,QA Format,Number of Time Incorrect,Number of Time Correct,Username,Player Score
+2,100,00:10:00,25,00:05:00,Spanish Fundamental Vocab 1 World,Snd->Img,0,1,userAlpha,75
+3,100,00:10:00,25,00:05:00,Spanish Fundamental Vocab 1 Salt,Tran->Img,0,1,userAlpha,75
+4,100,00:10:00,25,00:05:00,Spanish Fundamental Vocab 1 Hand,Tran->Img,0,1,userAlpha,75
+4,100,00:10:00,26,00:05:00,Spanish Fundamental Vocab 1 Hand,Snd->Eng,0,1,userAlpha,75
+6,100,00:10:00,26,00:05:00,Spanish Fundamental Vocab 1 Nose,Snd->Img,1,0,userAlpha,75
+7,100,00:10:00,26,00:05:00,Spanish Fundamental Vocab 1 Mouth,End->SND,0,1,userAlpha,75
+8,100,00:10:00,26,00:05:00,Spanish Fundamental Vocab 1 Meat,End->SND,0,2,userAlpha,75
+10,100,00:10:00,25,00:05:00,Spanish Fundamental Vocab 1 Star,Snd->Tran,0,1,userAlpha,75
+10,100,00:10:00,26,00:05:00,Spanish Fundamental Vocab 1 Star,Eng->Tran,0,1,userAlpha,75
+10,100,00:10:00,25,00:05:00,Spanish Fundamental Vocab 1 Star,Eng->Tran,0,1,userAlpha,75

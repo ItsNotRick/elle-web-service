@@ -3,7 +3,7 @@ from flask_restful import Resource, Api
 from flask_jwt_extended import JWTManager
 from flaskext.mysql import MySQL
 
-from resources.users import UserRegister, UserLogin, UserLogout, Users, User, ResetPassword
+from resources.users import UserRegister, UserLogin, UserLogout, Users, User, ResetPassword, ForgotPassword, ForgotCheck
 from resources.sessions import Session
 from resources.leaderboard import Leaderboard
 from resources.decks import Deck, Decks, Game_Deck
@@ -16,8 +16,12 @@ import os.path
 
 app = Flask(__name__, static_folder='./templates/build/static')
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'elleservice02!'
+#app.config['MYSQL_DATABASE_PASSWORD'] = 'elleservice02!'
+app.config['MYSQL_DATABASE_PASSWORD'] = '#Endlesslearner!'
 app.config['MYSQL_DATABASE_DB'] = 'elle3'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'kalonte1996'
+app.config['MYSQL_DATABASE_USER'] = 'root'
+#app.config['MYSQL_DATABASE_HOST'] = '45.55.61.182'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access']  # allow blacklisting for access tokens
@@ -59,7 +63,8 @@ def check_if_token_in_blacklist(decrypted_token):
 
 api.add_resource(HomePage, '/')
 api.add_resource(Users, '/users')
-api.add_resource(User, '/user/<int:_id>')
+#api.add_resource(User, '/user/<int:_id>')
+api.add_resource(User, '/user')
 api.add_resource(Decks, '/decks', '/decks/<int:_mark>')
 api.add_resource(Deck, '/deck', '/deck/<int:_id>')
 api.add_resource(Game_Deck, '/deck/zip/<int:_id>')
@@ -73,6 +78,9 @@ api.add_resource(Groups, '/groups')
 api.add_resource(Group, '/group', '/group/<int:_id>')
 api.add_resource(CardImage, '/card/image/<int:_id>')
 api.add_resource(CardSound, '/card/sound/<int:_id>')
+api.add_resource(ForgotPassword, '/forgot/<username>')
 api.add_resource(ResetPassword, '/users/reset')
+api.add_resource(ForgotCheck, '/forgot/check')
+
 
 app.run(port=5000, debug=True)
