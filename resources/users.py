@@ -49,19 +49,26 @@ class UserRegister(Resource):
 		                          type=str,
 		                          required=True,
 		                          )
-		user_parser.add_argument('sex',
+		user_parser.add_argument('confirm',
+		                          type=str,
+		                          required=True,
+		                          )
+		user_parser.add_argument('classID',
 		                          type=str,
 		                          required=False,
 		                          )
-		user_parser.add_argument('age',
+		user_parser.add_argument('pass_question',
 		                          type=int,
-		                          required=False,
+		                          required=True,
 		                          )
-		user_parser.add_argument('motivation',
+		user_parser.add_argument('pass_answer',
 		                          type=str,
-		                          required=False,
+		                          required=True,
 		                          )
 		data = user_parser.parse_args()
+		
+		if data['password'] != data['confirm']:
+			return{'message':'Passwords do not match!'},400
 
 		find_user, user = find_by_name(data['username'])
 
@@ -73,16 +80,25 @@ class UserRegister(Resource):
 		
 		maxID = check_max_id(result)
 
-		sex = data['sex'] if 'sex' in data else ''
-		age = data['age'] if 'age' in data else 0
-		motivation = data['motivation'] if 'motivation' in data else ''
+		classID = data['classID'] if 'classID' in data else -1
 
-		query = "INSERT INTO user VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+		if data['classID'] != '':
+			classID = int(data['classID'])
+		else:
+			classID = -1
+
+
+		query = "INSERT INTO user VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
 		salted_password = generate_password_hash(data['password'])
+		salted_answer = generate_password_hash(data['pass_answer'])
 
-		post_to_db(query, (maxID,data['username'],salted_password,'key','reset','us',0,None,sex,age,motivation))
+		post_to_db(query, (maxID,data['username'],salted_password,'key','reset','us',0,None,'',0,'',0,data['pass_question'],salted_answer))
 		
+		if classID >= 0:
+			class_query = "INSERT INTO group_user values (%s, %s,%s)"
+			post_to_db(class_query,(classID,maxID,0))
+
 		return {'message':'Successfully registered!'}, 201
 
 class UserLogin(Resource):
@@ -110,8 +126,9 @@ class UserLogin(Resource):
 					'permissions': user[5],
 					'id':user[0]
 				}, 200
-
-		return {'message':'Invalid credentials!'}, 401
+			else:
+				return {'message':'Incorrect Password!'}, 401
+		return {'message':'User Not Found!'}, 401
 
 class UserLogout(Resource):
 
@@ -137,7 +154,14 @@ class ResetPassword(Resource):
 		                          type=str,
 		                          required=True,
 		                          )
+		user_parser.add_argument('confirm',
+		                          type=str,
+		                          required=True,
+		                          )
 		data = user_parser.parse_args()
+		
+		if data['pw'] != data['confirm']:
+			return{'message':'Passwords do not match!'},400
 
 		pw = generate_password_hash(data['pw'])
 
@@ -170,48 +194,113 @@ class Users(Resource):
 		return final_list
 
 class User(Resource):
-
 	@jwt_required
-	def get(self, _id):
-
-		query = "SELECT userID,username,sex,age,motivation FROM user WHERE userID=" + str(_id)
-
+	def get(self):
+		_id = get_jwt_identity()
+		query = "SELECT * FROM user WHERE userID = "+str(_id)
 		result = get_from_db(query)
+		for row in result:
+			stuff = {}
+			stuff['id'] = row[0]
+			stuff['username'] = row[1]
+			stuff['motivation'] = row[10]
+		return stuff
+		#_id = 300
+		#print(_id)
+		#return {'message':'Successfully reset the password'+str(_id)}, 400
 
-		if result:
-			return_item = {}
-			return_item['id'] = result[0][0]
-			return_item['username'] = result[0][1]
-			return_item['sex'] = result[0][2]
-			return_item['age'] = result[0][3]
-			return_item['motivation'] = result[0][4]
-			return return_item
-		else:
-			return {'message':'No user with this ID found'}, 400
+class ForgotPassword(Resource):
+	def post(self):
+		user_parser = reqparse.RequestParser()
+		user_parser.add_argument('username',
+		                          type=str,
+		                          required=True,
+		                          )
 
-	@jwt_required
-	def delete(self, _id):
+		data = user_parser.parse_args()
+		find_user, user = find_by_name(data['username'])
+		if find_user:
+			question = user[12]
+			if question == 1:
+				return{
+					'question': 'What is your favorite book?'
+				}, 200
+			elif question == 2:
+				return{
+					'question': 'What is the name of the road you grew up on?'
+				}, 200
+			elif question == 3:
+				return{
+					'question': 'What is the name of your favorite pet?'
+				}, 200
+			elif question == 4:
+				return{
+					'question': 'What is your favorite food?'
+				}, 200
+			elif question == 5:
+				return{
+					'question': 'What was the model of your first car?'
+				}, 200
+			elif question == 0:
+				return{
+					'question': 'You do not have a security question. Please create a new account.'
+				}, 200
+			else:
+				return{
+					'question': "Couldn't find question"
+				}, 400
+		else: return{'message':"User not found"},400
 
-		if not _id:
-			return {'message':'Please provide the id of the user that you wish to delete'}, 400
+class ForgotCheck(Resource):
+	def post(self):
+		user_parser = reqparse.RequestParser()
+		user_parser.add_argument('username',
+		                          type=str,
+		                          required=True,
+		                          )
+		user_parser.add_argument('answer',
+		                          type=str,
+		                          required=True,
+		                          )
+		data = user_parser.parse_args()
 
-		if not check_user_db(_id):
-			return {'message':'cannot delete non-existing person'}, 400
+		user = data['username']
+		find_user, user = find_by_name(data['username'])
+		if find_user:
+			if check_password_hash(user[13],data['answer']):
+				return {'message':'Answer matches security question',
+						'userID':user[0]}, 201
+			else:
+				return {'message':'Incorrect Answer!'}, 400
+		return {'message':'User Not Found!'}, 400
 
-		user_id = get_jwt_identity()
 
-		query = "SELECT permissionGroup from user where userID = " + str(user_id)
-		permission = get_from_db(query)
+class ForgotReset(Resource):
 
-		if not permission:
-			return {'Message':'Not a valid user'}, 400
+	def post(self):
+		user_parser = reqparse.RequestParser()
+		user_parser.add_argument('userID',
+		                          type=int,
+		                          required=True,
+		                          )
+		user_parser.add_argument('pw',
+		                          type=str,
+		                          required=True,
+		                          )
+		user_parser.add_argument('confirm',
+		                          type=str,
+		                          required=True,
+		                          )
+		data = user_parser.parse_args()
+		
+		if data['pw'] != data['confirm']:
+			return{'message':'Passwords do not match!'},400
 
-		permission = permission[0][0]
+		pw = generate_password_hash(data['pw'])
 
-		if not permission == 'ad':
-			return {'message':'not your user to delete'}, 400
+		query = "UPDATE user SET password=%s WHERE userID=" + str(data['userID'])
 
-		transfer_user_decks(_id)
-		query = "DELETE FROM user WHERE userID=%s"
-		delete_from_db(query, (_id,))
-		return {'message':'Successfully deleted user with id: ' + str(_id)}, 200
+		post_to_db(query, (pw,))
+
+		return {'message':'Successfully reset the password'}, 201
+		

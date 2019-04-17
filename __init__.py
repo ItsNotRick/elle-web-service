@@ -5,7 +5,7 @@ from flaskext.mysql import MySQL
 
 from flask_cors import CORS
 
-from resources.users import UserRegister, UserLogin, UserLogout, Users, User, ResetPassword
+from resources.users import UserRegister, UserLogin, UserLogout, Users, User, ResetPassword, ForgotPassword, ForgotCheck, ForgotReset
 from resources.sessions import Session
 from resources.leaderboard import Leaderboard
 from resources.decks import Deck, Decks, Game_Deck
@@ -64,7 +64,7 @@ def check_if_token_in_blacklist(decrypted_token):
 
 api.add_resource(HomePage, '/')
 api.add_resource(Users, '/users')
-api.add_resource(User, '/user/<int:_id>')
+api.add_resource(User, '/user')
 api.add_resource(Decks, '/decks', '/decks/<int:_mark>')
 api.add_resource(Deck, '/deck', '/deck/<int:_id>')
 api.add_resource(Game_Deck, '/deck/zip/<int:_id>')
@@ -78,6 +78,9 @@ api.add_resource(Groups, '/groups')
 api.add_resource(Group, '/group', '/group/<int:_id>')
 api.add_resource(CardImage, '/card/image/<int:_id>')
 api.add_resource(CardSound, '/card/sound/<int:_id>')
+api.add_resource(ForgotPassword, '/forgot')
 api.add_resource(ResetPassword, '/users/reset')
+api.add_resource(ForgotCheck, '/forgot/check')
+api.add_resource(ForgotReset, '/forgot/reset')
 
 app.run(port=5000, debug=True)

@@ -129,7 +129,6 @@ def convert_audio(filename):
 		
 		ffmpeg.input(true_filename, acodec='libvorbis').output(output_name, audio_bitrate='64k').run()
 		
-		print("???")
 		return True
 	except Exception as e:
 		print(str(e))
