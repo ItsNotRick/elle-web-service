@@ -154,7 +154,14 @@ class ResetPassword(Resource):
 		                          type=str,
 		                          required=True,
 		                          )
+		user_parser.add_argument('confirm',
+		                          type=str,
+		                          required=True,
+		                          )
 		data = user_parser.parse_args()
+		
+		if data['pw'] != data['confirm']:
+			return{'message':'Passwords do not match!'},400
 
 		pw = generate_password_hash(data['pw'])
 
@@ -196,28 +203,56 @@ class User(Resource):
 			stuff = {}
 			stuff['id'] = row[0]
 			stuff['username'] = row[1]
-			stuff['age'] = row[9]
 			stuff['motivation'] = row[10]
-			stuff['sex'] = row[8]
 		return stuff
 		#_id = 300
 		#print(_id)
 		#return {'message':'Successfully reset the password'+str(_id)}, 400
 
 class ForgotPassword(Resource):
-	def get(self,username):
-		user = username
-		if not user:
-			return {'message':'No user passed'}, 400
-		query = 'SELECT * FROM user WHERE username = \"'+user+'\"'
-		result = get_from_db(query)
-		reen = {}
-		for row in result:
-			reen['question'] = row[12]
-		return reen
+	def post(self):
+		user_parser = reqparse.RequestParser()
+		user_parser.add_argument('username',
+		                          type=str,
+		                          required=True,
+		                          )
+
+		data = user_parser.parse_args()
+		find_user, user = find_by_name(data['username'])
+		if find_user:
+			question = user[12]
+			if question == 1:
+				return{
+					'question': 'What is your favorite book?'
+				}, 200
+			elif question == 2:
+				return{
+					'question': 'What is the name of the road you grew up on?'
+				}, 200
+			elif question == 3:
+				return{
+					'question': 'What is the name of your favorite pet?'
+				}, 200
+			elif question == 4:
+				return{
+					'question': 'What is your favorite food?'
+				}, 200
+			elif question == 5:
+				return{
+					'question': 'What was the model of your first car?'
+				}, 200
+			elif question == 0:
+				return{
+					'question': 'You do not have a security question. Please create a new account.'
+				}, 200
+			else:
+				return{
+					'question': "Couldn't find question"
+				}, 400
+		else: return{'message':"User not found"},400
 
 class ForgotCheck(Resource):
-	def get(self):
+	def post(self):
 		user_parser = reqparse.RequestParser()
 		user_parser.add_argument('username',
 		                          type=str,
@@ -233,10 +268,39 @@ class ForgotCheck(Resource):
 		find_user, user = find_by_name(data['username'])
 		if find_user:
 			if check_password_hash(user[13],data['answer']):
-				return {'message':'Answer matches security question'}, 201
+				return {'message':'Answer matches security question',
+						'userID':user[0]}, 201
 			else:
-				return {'message':'Incorrect Password!'}, 201
-		return {'message':'User Not Found!'}, 201
+				return {'message':'Incorrect Answer!'}, 400
+		return {'message':'User Not Found!'}, 400
 
+
+class ForgotReset(Resource):
+
+	def post(self):
+		user_parser = reqparse.RequestParser()
+		user_parser.add_argument('userID',
+		                          type=int,
+		                          required=True,
+		                          )
+		user_parser.add_argument('pw',
+		                          type=str,
+		                          required=True,
+		                          )
+		user_parser.add_argument('confirm',
+		                          type=str,
+		                          required=True,
+		                          )
+		data = user_parser.parse_args()
 		
+		if data['pw'] != data['confirm']:
+			return{'message':'Passwords do not match!'},400
+
+		pw = generate_password_hash(data['pw'])
+
+		query = "UPDATE user SET password=%s WHERE userID=" + str(data['userID'])
+
+		post_to_db(query, (pw,))
+
+		return {'message':'Successfully reset the password'}, 201
 		
