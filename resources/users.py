@@ -307,7 +307,7 @@ class ForgotReset(Resource):
 class StatsInsert(Resource):
 	def get(self):
 		data = request.get.json()
-		query = "INSERT INTO gamelog VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
+		query = "INSERT INTO gamelogs VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
 
 		if post_to_db(query,('',data['userID'],data['deck_ID'],data['correct'],data['incorrect'],data['score'],data['platform'],'')):
 			return {'message':'Successfully inserted gamelog data'}, 201
