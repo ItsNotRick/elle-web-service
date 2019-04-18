@@ -305,7 +305,7 @@ class ForgotReset(Resource):
 		return {'message':'Successfully reset the password'}, 201
 
 class StatsInsert(Resource):
-	def get(self):
+	def post(self):
 		data = request.get.json()
 		query = "INSERT INTO gamelogs VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
 
