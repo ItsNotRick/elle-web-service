@@ -3,7 +3,7 @@ from flask_restful import Resource, Api
 from flask_jwt_extended import JWTManager
 from flaskext.mysql import MySQL
 
-from resources.users import UserRegister, UserLogin, UserLogout, Users, User, ResetPassword, ForgotPassword, ForgotCheck, ForgotReset
+from resources.users import UserRegister, UserLogin, UserLogout, Users, User, ResetPassword, ForgotPassword, ForgotCheck, ForgotReset,StatsInsert,Stats
 from resources.sessions import Session
 from resources.leaderboard import Leaderboard
 from resources.decks import Deck, Decks, Game_Deck
@@ -82,6 +82,8 @@ api.add_resource(ForgotPassword, '/forgot')
 api.add_resource(ResetPassword, '/users/reset')
 api.add_resource(ForgotCheck, '/forgot/check')
 api.add_resource(ForgotReset, '/forgot/reset')
+api.add_resource(StatsInsert,'/insertstats')
+api.add_resource(Stats,'/stats')
 
 
 app.run(port=5000, debug=True)

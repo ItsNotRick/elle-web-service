@@ -303,4 +303,48 @@ class ForgotReset(Resource):
 		post_to_db(query, (pw,))
 
 		return {'message':'Successfully reset the password'}, 201
+
+class StatsInsert(Resource):
+	def get(self):
+		data = request.get.json()
+		query = "INSERT INTO gamelog VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
+
+		if post_to_db(query,('',data['userID'],data['deck_ID'],data['correct'],data['incorrect'],data['score'],data['platform'],'')):
+			return {'message':'Successfully inserted gamelog data'}, 201
+		else:
+			return {'message':'Insert failed!'}, 400
+
+				
+class Stats(Resource):
+	@jwt_required
+	def get(self):
+		_id = get_jwt_identity()
+		query = "SELECT * FROM gamelogs WHERE userID = "+str(_id)
+		result = get_from_db(query)
+		if not result:
+			return {'message':'User not found'},400
+		values = []
+		val1 = 0
+		val2 = 0
+		val3 = 0
+		val4 = 0
+		val5 = 0
+		val6 = 0
 		
+		for row in result:
+			if row[6] == 1 :
+				val1+=1
+			elif row[6] == 1 :
+				val2+=1
+			elif row[6] == 1 :
+				val3+=1
+			elif row[6] == 1 :
+				val4+=1
+			elif row[6] == 1 :
+				val5+=1
+			else:
+				val6+=1
+		
+		values = [val1,val2,val3,val4,val5,val6]
+		return {'labels': ['ELLE Mobile 2D','ELLE Mobile 3D','ELLE AR','ELLE 2.0','ELLE 1.0','Project ELLE'],
+				'values': values}, 200

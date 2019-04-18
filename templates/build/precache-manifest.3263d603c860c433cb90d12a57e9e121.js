@@ -1,23 +1,27 @@
 self.__precacheManifest = [
   {
-    "revision": "1d225ee5117334f14d47",
-    "url": "/static/css/main.fa37fbec.chunk.css"
+    "revision": "2c4946d6ad62d4525022",
+    "url": "/static/css/main.e90532f9.chunk.css"
   },
   {
-    "revision": "1d225ee5117334f14d47",
-    "url": "/static/js/main.1d225ee5.chunk.js"
+    "revision": "2c4946d6ad62d4525022",
+    "url": "/static/js/main.2c4946d6.chunk.js"
   },
   {
-    "revision": "699573b76cc539ee3321",
-    "url": "/static/css/1.c19a8887.chunk.css"
+    "revision": "0fda2a5e2edc91da7bd9",
+    "url": "/static/css/1.d3a0f13d.chunk.css"
   },
   {
-    "revision": "699573b76cc539ee3321",
-    "url": "/static/js/1.699573b7.chunk.js"
+    "revision": "0fda2a5e2edc91da7bd9",
+    "url": "/static/js/1.0fda2a5e.chunk.js"
   },
   {
     "revision": "229c360febb4351a89df",
     "url": "/static/js/runtime~main.229c360f.js"
+  },
+  {
+    "revision": "d1112d5b0f3dca75a1124775e012f408",
+    "url": "/static/media/1.d1112d5b.jpg"
   },
   {
     "revision": "05acfdb568b3df49ad31355b19495d4a",
@@ -34,14 +38,6 @@ self.__precacheManifest = [
   {
     "revision": "621bd386841f74e0053cb8e67f8a0604",
     "url": "/static/media/ionicons.621bd386.svg"
-  },
-  {
-    "revision": "d1112d5b0f3dca75a1124775e012f408",
-    "url": "/static/media/1.d1112d5b.jpg"
-  },
-  {
-    "revision": "133b4500ad9a4469e80d254f0ab10bbe",
-    "url": "/static/media/ELLE-Background-Full.133b4500.png"
   },
   {
     "revision": "af7ae505a9eed503f8b8e6982036873e",
@@ -64,12 +60,20 @@ self.__precacheManifest = [
     "url": "/static/media/fontawesome-webfont.912ec66d.svg"
   },
   {
-    "revision": "3849399303302f2e548f57686441d4e1",
-    "url": "/static/media/mobile3D.38493993.jpg"
+    "revision": "133b4500ad9a4469e80d254f0ab10bbe",
+    "url": "/static/media/ELLE-Background-Full.133b4500.png"
   },
   {
     "revision": "32877de474265ba8e9355a2fd22a1a8d",
     "url": "/static/media/ELLE_Login.32877de4.jpg"
+  },
+  {
+    "revision": "37afc9aebb4bc9dca59552aefe676152",
+    "url": "/static/media/project_elle.37afc9ae.png"
+  },
+  {
+    "revision": "3849399303302f2e548f57686441d4e1",
+    "url": "/static/media/mobile3D.38493993.jpg"
   },
   {
     "revision": "e7fb351caa5123323ec120dd4ad639c2",
@@ -80,7 +84,7 @@ self.__precacheManifest = [
     "url": "/static/media/VR.2c42951e.jpg"
   },
   {
-    "revision": "e4f6f5b9271df7b36b2bf647a718af91",
+    "revision": "b16a6371df4ca94a7113060f90b6bc24",
     "url": "/index.html"
   }
 ];
