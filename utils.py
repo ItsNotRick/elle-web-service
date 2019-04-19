@@ -25,10 +25,13 @@ def create_csv(data, _id):
 			data_row = []
 			data_row.append(item[0])
 			data_row.append(item[3])
-			data_row.append(item[4].encode('utf-8').strip())
+			data_row.append(item[4])#.encode('utf-8').strip())
 			csv_writer.writerow(data_row)
-
-	os.rename(filename, cross_plat_path('zips/Deck_' + _id))
+	try:
+		os.remove(cross_plat_path('zips/Deck_' + _id + '/' + 'Deck_' + _id) + '.csv')
+	except:
+		pass
+	os.rename(filename, cross_plat_path('zips/Deck_' + _id + '/' + 'Deck_' + _id) + '.csv')
 
 def create_zip(data, _id, deck_name):
 	file_name = cross_plat_path('zips/Deck_' +  _id + '.zip')
@@ -54,17 +57,20 @@ def create_zip(data, _id, deck_name):
 
 	# len(audio) == len(images)
 	for item in data:
-		image_name = str(item[8].split('/')[-1])
-		audio_name = str(item[9].split('/')[-1])
-
+		image_name = Path(str(item[8]))#.split('/')[-1])
+		audio_name = Path(str(item[9]))#.split('/')[-1])
 		file_path = cross_plat_path('zips/Deck_' + _id)
 
-		shutil.copy2(cross_plat_path('Audio/' + audio_name), cross_plat_path('zips/Deck_' + _id + '/Audio'))
-		shutil.copy2(cross_plat_path('Images/' + image_name), cross_plat_path('zips/Deck_' + _id + '/Images'))
+		shutil.copy2(cross_plat_path(str(audio_name)), cross_plat_path(file_path + '/Audio/' + audio_name.name))
+		shutil.copy2(cross_plat_path(str(image_name)), cross_plat_path(file_path + '/Images/' + image_name.name))
 
+	try:
+		os.remove(cross_plat_path('zips/Deck_' +  _id) + '.zip')
+	except:
+		pass
 	shutil.make_archive(cross_plat_path('zips/Deck_' +  _id), 'zip', cross_plat_path('zips/Deck_' + _id))
 
-	os.removedirs(cross_plat_path('zips/Deck_' + _id))
+	shutil.rmtree(cross_plat_path('zips/Deck_' + _id))
 
 def get_id_file_name(_id): #, filename):
 	
@@ -114,10 +120,8 @@ def convert_audio(filename):
 
 	try:
 		true_filename = cross_plat_path('uploads/' + filename)
-		print(true_filename)
 		filename, file_extension = os.path.splitext(filename)
 		output_name = cross_plat_path('Audio/' + filename + '.ogg')
-		print(output_name)
 		# command = ['ffmpeg','-i']
 		# command.append(true_filename)
 		# command.append('-c:a')

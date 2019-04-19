@@ -178,7 +178,6 @@ class CardSound(Resource):
 
       success = convert_audio(filename + file_extension)
       if success:
-        print(new_path)
         os.remove(cross_plat_path('uploads/'+ filename + file_extension))
         return {'message':'Successfully uploaded a sound file!'}, 201
       else:

@@ -222,7 +222,6 @@ class Game_Deck(Resource):
 
 	@jwt_required
 	def get(self, _id):
-		
 		audio_locations = []
 		image_locations = []
 
@@ -257,7 +256,6 @@ class Game_Deck(Resource):
 		query = "SELECT deckName FROM deck WHERE deckID = " + str(_id)
 		deck_name = get_from_db(query)
 		deck_name = deck_name[0][0]
-		
 		create_zip(result, str(_id), deck_name)
 
 		file_name = 'Deck_' + str(_id) + '.zip'
