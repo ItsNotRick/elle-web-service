@@ -70,7 +70,7 @@ class UserRegister(Resource):
 		if data['password'] != data['confirm']:
 			return{'message':'Passwords do not match!'},400
 
-		find_user, user = find_by_name(data['username'])
+		find_user, user = find_by_name(data['username'].lower())
 
 		if find_user:
 			return {'message':'A user with that name already exists!'}, 400
@@ -93,7 +93,7 @@ class UserRegister(Resource):
 		salted_password = generate_password_hash(data['password'])
 		salted_answer = generate_password_hash(data['pass_answer'])
 
-		post_to_db(query, (maxID,data['username'],salted_password,'key','reset','us',0,None,'',0,'',0,data['pass_question'],salted_answer))
+		post_to_db(query, (maxID,data['username'].lower(),salted_password,'key','reset','us',0,None,'',0,'',0,data['pass_question'],salted_answer))
 		
 		if classID >= 0:
 			class_query = "INSERT INTO group_user values (%s, %s,%s)"
@@ -116,7 +116,7 @@ class UserLogin(Resource):
 		                          )
 		data = user_parser.parse_args()
 
-		find_user, user = find_by_name(data['username'])
+		find_user, user = find_by_name(data['username'].lower())
 		if find_user:
 			if check_password_hash(user[2],data['password']): # userID, username, password -- 0,1,2
 				put_in_blacklist(user[0])
@@ -218,7 +218,7 @@ class ForgotPassword(Resource):
 		                          )
 
 		data = user_parser.parse_args()
-		find_user, user = find_by_name(data['username'])
+		find_user, user = find_by_name(data['username'].lower())
 		if find_user:
 			question = user[12]
 			if question == 1:
@@ -265,7 +265,7 @@ class ForgotCheck(Resource):
 		data = user_parser.parse_args()
 
 		user = data['username']
-		find_user, user = find_by_name(data['username'])
+		find_user, user = find_by_name(data['username'].lower())
 		if find_user:
 			if check_password_hash(user[13],data['answer']):
 				return {'message':'Answer matches security question',
@@ -323,6 +323,9 @@ class Stats(Resource):
 		result = get_from_db(query)
 		if not result:
 			return {'message':'User not found'},400
+		score_query = "SELECT MAX(score) from gamelogs WHERE userID ="+str(_id)
+		score_result = get_from_db(score_query)
+		
 		values = []
 		val1 = 0
 		val2 = 0
@@ -334,17 +337,18 @@ class Stats(Resource):
 		for row in result:
 			if row[6] == 1 :
 				val1+=1
-			elif row[6] == 1 :
+			elif row[6] == 2 :
 				val2+=1
-			elif row[6] == 1 :
+			elif row[6] == 3 :
 				val3+=1
-			elif row[6] == 1 :
+			elif row[6] == 4 :
 				val4+=1
-			elif row[6] == 1 :
+			elif row[6] == 5 :
 				val5+=1
 			else:
 				val6+=1
 		
 		values = [val1,val2,val3,val4,val5,val6]
 		return {'labels': ['ELLE Mobile 2D','ELLE Mobile 3D','ELLE AR','ELLE 2.0','ELLE 1.0','Project ELLE'],
-				'values': values}, 200
+				'values': values,
+				'highscore': score_result}, 200
