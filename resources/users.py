@@ -305,11 +305,37 @@ class ForgotReset(Resource):
 		return {'message':'Successfully reset the password'}, 201
 
 class StatsInsert(Resource):
-	def get(self):
-		data = request.get.json()
-		query = "INSERT INTO gamelogs VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
+	def post(self):
+		user_parser = reqparse.RequestParser()
+		user_parser.add_argument('userID',
+		                          type=str,
+		                          required=True,
+		                          )
+		user_parser.add_argument('deck_ID',
+		                          type=str,
+		                          required=True,
+		                          )
+		user_parser.add_argument('correct',
+		                          type=str,
+		                          required=True,
+		                          )
+		user_parser.add_argument('incorrect',
+		                          type=str,
+		                          required=True,
+		                          )
+		user_parser.add_argument('score',
+		                          type=str,
+		                          required=True,
+		                          )
+		user_parser.add_argument('platform',
+		                          type=str,
+		                          required=True,
+		                          )
+		data = user_parser.parse_args()
+		#query = "INSERT INTO gamelogs VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
+		query = "INSERT INTO `gamelogs`(`userID`, `deck_ID`, `correct`, `incorrect`, `score`, `platform`) VALUES (%s,%s,%s,%s,%s,%s)"
 
-		if post_to_db(query,('',data['userID'],data['deck_ID'],data['correct'],data['incorrect'],data['score'],data['platform'],'')):
+		if post_to_db(query,(data['userID'],data['deck_ID'],data['correct'],data['incorrect'],data['score'],data['platform'])):
 			return {'message':'Successfully inserted gamelog data'}, 201
 		else:
 			return {'message':'Insert failed!'}, 400
