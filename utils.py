@@ -110,6 +110,7 @@ def check_cards_db(_id):
 
 def convert_audio(filename):
 
+	return {'message':'PANIC'}, 201
 	try:
 		true_filename = './uploads/' + filename
 		output_name = './uploads/' + filename[:-4] + '.ogg'

@@ -333,12 +333,12 @@ class StatsInsert(Resource):
 		                          )
 		data = user_parser.parse_args()
 		#query = "INSERT INTO gamelogs VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
-		query = "INSERT INTO `gamelogs`(`userID`, `deck_ID`, `correct`, `incorrect`, `score`, `platform`) VALUES (%s,%s,%s,%s,%s,%s)"
+		query = "INSERT INTO gamelogs (userID, deck_ID, correct, incorrect, score, platform) VALUES (%s,%s,%s,%s,%s,%s)"
 
-		if post_to_db(query,(data['userID'],data['deck_ID'],data['correct'],data['incorrect'],data['score'],data['platform'])):
-			return {'message':'Successfully inserted gamelog data'}, 201
-		else:
-			return {'message':'Insert failed!'}, 400
+		post_to_db(query,(data['userID'],data['deck_ID'],data['correct'],data['incorrect'],data['score'],data['platform']))
+		
+		return {'message':'Successfully inserted gamelog data'}, 201
+		
 
 				
 class Stats(Resource):

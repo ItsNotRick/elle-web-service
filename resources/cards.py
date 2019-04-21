@@ -173,8 +173,9 @@ class CardSound(Resource):
 			new_path = './Audio/' + filename[:-4] + '.ogg'
 			post_to_db(query, (_id, new_path))
 
+			
 			success = convert_audio(filename)
-
+	 		return{'message':'Made it lslsls here!'},200
 			if success:
 				os.system('mv ./uploads/' + filename[:-4] + '.ogg' + ' ./Audio/' + filename[:-4] + '.ogg')
 				os.remove('./uploads/'+filename)
