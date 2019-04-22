@@ -3,12 +3,13 @@ from flask_restful import Resource, Api
 from flask_jwt_extended import JWTManager
 from flaskext.mysql import MySQL
 
-from resources.users import UserRegister, UserLogin, UserLogout, Users, User, ResetPassword, ForgotPassword, ForgotCheck, ForgotReset,StatsInsert,Stats
+from resources.users import UserRegister, UserLogin, UserLogout, Users, User, ResetPassword, ForgotPassword, ForgotCheck, ForgotReset,Stats, StatsInsert, Progress, Leaderboard, ExportGameLog, BarRatio
 from resources.sessions import Session
-from resources.leaderboard import Leaderboard
+from resources.leaderboard import Leaderboards
 from resources.decks import Deck, Decks, Game_Deck
 from resources.cards import Card, CardImage, CardSound
 from resources.groups import Group, Groups
+#from resources.stats import Stats, StatsInsert, Progress, Leaderboard, ExportGameLog, BarRatio
 from db import mysql
 from db_utils import *
 
@@ -68,7 +69,7 @@ api.add_resource(User, '/user')
 api.add_resource(Decks, '/decks', '/decks/<int:_mark>')
 api.add_resource(Deck, '/deck', '/deck/<int:_id>')
 api.add_resource(Game_Deck, '/deck/zip/<int:_id>')
-api.add_resource(Leaderboard, '/leaderboard/<int:_id>')
+api.add_resource(Leaderboards, '/leaderboards/<int:_id>')
 api.add_resource(Session, '/session', '/session/<int:_id>')
 api.add_resource(UserLogin, '/login')
 api.add_resource(UserLogout, '/logout')
@@ -84,6 +85,12 @@ api.add_resource(ForgotCheck, '/forgot/check')
 api.add_resource(ForgotReset, '/forgot/reset')
 api.add_resource(StatsInsert,'/insertstats')
 api.add_resource(Stats,'/stats')
+api.add_resource(Leaderboard,'/leaderboard')
+api.add_resource(Progress,'/progress')
+api.add_resource(ExportGameLog,'/exportgamelog')
+api.add_resource(BarRatio,'/barratio')
 
 
 app.run(port=5000, debug=True)
+#if __name__ == '__main__':
+#    app.run()

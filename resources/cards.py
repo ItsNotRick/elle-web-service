@@ -175,7 +175,6 @@ class CardSound(Resource):
 
 			
 			success = convert_audio(filename)
-	 		return{'message':'Made it lslsls here!'},200
 			if success:
 				os.system('mv ./uploads/' + filename[:-4] + '.ogg' + ' ./Audio/' + filename[:-4] + '.ogg')
 				os.remove('./uploads/'+filename)

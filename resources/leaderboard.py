@@ -4,7 +4,7 @@ from db import mysql
 from db_utils import *
 from utils import *
 
-class Leaderboard(Resource):
+class Leaderboards(Resource):
 
 	@jwt_required
 	def get(self, _id):
