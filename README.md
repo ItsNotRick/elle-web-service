@@ -4,7 +4,7 @@ http://endlesslearner.com/
 https://github.com/ItsNotRick/elle
 
 # ELLE Web Service
-This is the backend for ELLE, it handles API endpoints and serves our [React app](https://github.com/eugenerbl/ELLE_Ultimate_Web).
+This is the backend for ELLE. It handles API endpoints and serves our [React app](https://github.com/eugenerbl/ELLE_Ultimate_Web).
 
 ## API
 * / -> React App
@@ -33,14 +33,15 @@ This is the backend for ELLE, it handles API endpoints and serves our [React app
 
 
 ## For readers wishing to contribute to ELLE Web Service
-Read the `__init__.py` file in the root directory. Look at all of the routes at the bottom of the file, now read through every `.py` file in the resources folder. For reference on using the API you can read [this method in the mobile game](https://github.com/ItsNotRick/elle-mobile-game/blob/72bd26254b085181fb155b4cbf2e9ad313f6dada/ELLEMobile3D/Assets/Scripts/LoginManager.cs#L147), this will be especially helpful if you haven't had experience with web before. Additionally read through utils.py, notice the use of Pathlib and cross platform commands. Be careful to mind the cross-platform nature of the code as you add new features.
+Read the `__init__.py` file in the root directory. Look at all of the routes at the bottom of the file. Now read through every `.py` file in the resources folder. For reference on using the API you can read [this method in the mobile game](https://github.com/ItsNotRick/elle-mobile-game/blob/72bd26254b085181fb155b4cbf2e9ad313f6dada/ELLEMobile3D/Assets/Scripts/LoginManager.cs#L147), this will be especially helpful if you haven't had experience with web before. Additionally read through utils.py, notice the use of Pathlib and cross platform commands. Be careful to mind the cross-platform nature of the code as you add new features.
 ### Environment Setup
-Download Python3, using pip install flask and all of the required modules (full list incoming, for now try to run the server and install all of the dependencies it says you're missing :^), don't forget the ffmpeg module and to install the actual [ffmpeg program](https://ffmpeg.org/download.html). For mysql you're going to install mysql (or mariadb, or another mysql drop in equivalent) and [create a database using the dump file](https://www.digitalocean.com/community/tutorials/how-to-import-and-export-databases-in-mysql-or-mariadb) on this repository. Launch the flask server with `python __init__.py` or `python3 __init__.py` depending on your platform.\
-**Important Note**\
-When deploying to the server you will need to update all of the DB config settings in `__init__.py`, for the love of all that is good and secure do not commit these changes to github, also don't use a password that you don't want public for your local development database.
+Download Python 3. Using pip, install flask and all of the required modules (full list incoming, for now try to run the server and install all of the dependencies it says you're missing :^). Don't forget the ffmpeg module and to install the actual [ffmpeg program](https://ffmpeg.org/download.html). For mysql you're going to install mysql (or mariadb, or another mysql drop in equivalent) and [create a database using the dump file](https://www.digitalocean.com/community/tutorials/how-to-import-and-export-databases-in-mysql-or-mariadb) on this repository. Launch the flask server with `python __init__.py` or `python3 __init__.py` depending on your platform.\
+#### Important Note
+When deploying to the server you will need to update all of the DB config settings in `__init__.py`. For the love of all that is good and secure do not commit these changes to github and also don't use a password that you don't want public for your local development database.
 
 ### Deploying
-Read the full instructions [here](https://github.com/ItsNotRick/elle). tldr:
+Read the full instructions [here](https://github.com/ItsNotRick/elle).\
+tldr:
 * copy entire folder to a new prep folder
 * remove the port and debug flags from app.run()
 * enclose app.run() in an `if __name__ == '__main__':` block
