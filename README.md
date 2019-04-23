@@ -40,7 +40,7 @@ Download Python3, using pip install flask and all of the required modules (full 
 When deploying to the server you will need to update all of the DB config settings in `__init__.py`, for the love of all that is good and secure do not commit these changes to github, also don't use a password that you don't want public for your local development database.
 
 ### Deploying
-Read the full instructions [here](https://github.com/ItsNotRick/elle). tldr:\
+Read the full instructions [here](https://github.com/ItsNotRick/elle). tldr:
 * copy entire folder to a new prep folder
 * remove the port and debug flags from app.run()
 * enclose app.run() in an `if __name__ == '__main__':` block
